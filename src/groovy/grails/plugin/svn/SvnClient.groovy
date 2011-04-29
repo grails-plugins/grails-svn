@@ -76,8 +76,8 @@ class SvnClient {
     SvnClient(File wc) {
         this.authManager = SVNWCUtil.createDefaultAuthenticationManager()
 
-        def wcClient = new SVNWCClient(authManager, null)
-        def url = wcClient.doInfo(wc.canonicalFile, SVNRevision.HEAD).URL
+        def wcClient = new SVNStatusClient(authManager, null)
+        def url = wcClient.doStatus(wc.canonicalFile, false).URL
         this.repoUrl = SVNURL.create(url.protocol, url.userInfo, url.host, url.port, stripTrunkPath(url.path), false)
     }
 
