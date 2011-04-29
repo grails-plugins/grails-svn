@@ -13,7 +13,9 @@ grails.project.dependency.resolution = {
         mavenCentral()
     }
     dependencies {
-        build "org.tmatesoft.svnkit:svnkit:1.3.5"
+        build "org.tmatesoft.svnkit:svnkit:1.3.5", {
+            excludes "jna", "trilead-ssh2", "sqljet"
+        }
         test "org.gmock:gmock:0.8.1", {
             export = false
         }
