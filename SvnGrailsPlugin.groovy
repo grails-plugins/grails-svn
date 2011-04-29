@@ -27,4 +27,9 @@ Provides SVNKit as a dependency; an SvnClient class that makes it easier to work
 
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/svn"
+
+    def license = "APACHE"
+    def organization = [ name: "SpringSource", url: "http://www.springsource.org/" ]
+    def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GRAILSPLUGINS" ]
+    def scm = [ url: "https://github.com/grails-plugins/grails-svn" ]
 }
