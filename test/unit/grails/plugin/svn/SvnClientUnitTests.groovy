@@ -32,6 +32,7 @@ class SvnClientUnitTests extends GrailsUnitTestCase {
             def testClient = new SvnClient(repoUrl)
             assertNotNull "Repository URL is null.", testClient.repoUrl
             assertNotNull "Authentication manager is null.", testClient.authManager
+            assert !testClient.projectPath, "Project path is not empty." 
         }
     }
 
@@ -46,6 +47,75 @@ class SvnClientUnitTests extends GrailsUnitTestCase {
         }
     }
 
+    void testConstructorWithTrunk() {
+        mockClientConstruction()
+
+        play {
+            def testClient = new SvnClient("http://svn.codehaus.org/grails-plugins/trunk")
+            assert testClient.repoUrl?.path == "/grails-plugins"
+            assert testClient.projectPath == "trunk"
+        }
+    }
+
+    void testConstructorWithTrunkSlash() {
+        mockClientConstruction()
+
+        play {
+            def testClient = new SvnClient("http://svn.codehaus.org/grails-plugins/trunk/")
+            assert testClient.repoUrl?.path == "/grails-plugins"
+            assert testClient.projectPath == "trunk"
+        }
+    }
+
+    void testConstructorWithBranch() {
+        mockClientConstruction()
+
+        play {
+            def testClient = new SvnClient("http://svn.codehaus.org/grails-plugins/branches/my-branch")
+            assert testClient.repoUrl?.path == "/grails-plugins"
+            assert testClient.projectPath == "branches/my-branch"
+        }
+    }
+
+    void testConstructorWithBranchSlash() {
+        mockClientConstruction()
+
+        play {
+            def testClient = new SvnClient("http://svn.codehaus.org/svn/grails-plugins/branches/my-branch/")
+            assert testClient.repoUrl?.path == "/svn/grails-plugins"
+            assert testClient.projectPath == "branches/my-branch"
+        }
+    }
+
+    void testConstructorWithTag() {
+        mockClientConstruction()
+
+        play {
+            def testClient = new SvnClient("http://svn.codehaus.org/grails-plugins/tags/v1.1")
+            assert testClient.repoUrl?.path == "/grails-plugins"
+            assert testClient.projectPath == "tags/v1.1"
+        }
+    }
+
+    void testConstructorWithTagSlash() {
+        mockClientConstruction()
+
+        play {
+            def testClient = new SvnClient("http://svn.codehaus.org/svn/grails-plugins/tags/v1.1/")
+            assert testClient.repoUrl?.path == "/svn/grails-plugins"
+            assert testClient.projectPath == "tags/v1.1"
+        }
+    }
+
+    void testConstructorWithTagAndExtraPathInfo() {
+        mockClientConstruction()
+
+        play {
+            def testClient = new SvnClient("http://svn.codehaus.org/svn/grails-plugins/tags/v1.1/stuff")
+            assert testClient.repoUrl?.path == "/svn/grails-plugins/tags/v1.1/stuff"
+            assert !testClient.projectPath
+        }
+    }
 
     void testSetCredentials() {
         def mockUtil = mockClientConstruction()

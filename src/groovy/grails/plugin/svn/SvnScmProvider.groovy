@@ -177,7 +177,7 @@ class SvnScmProvider {
         checkSvnClient()
 
         handleAuthentication {
-            svnClient.tag("trunk", "tags", label.replaceAll(/\./, '_'), msg)
+            svnClient.tag(svnClient.projectPath, "tags", label.replaceAll(/\./, '_'), msg)
         }
     }
 

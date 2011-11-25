@@ -33,6 +33,9 @@ class SvnClient {
     private repoUrl
     private authManager
 
+    /** The part of the passed in repository URL that is 'trunk', 'branches/{name}', or 'tags/{name}'. */
+    private projectPath
+
     static {
         DAVRepositoryFactory.setup()
         FSRepositoryFactory.setup()
@@ -50,16 +53,19 @@ class SvnClient {
 
     /**
      * Creates a new client instance that works against the Subversion repository
-     * at the given URL. If the URL ends with '/trunk', that bit of the path is
-     * stripped out and the rest used as the base repository URL.
+     * at the given URL. If the URL ends with '/trunk', '/branches/*' or 'tags/*',
+     * that bit of the path is stripped out and the rest used as the base repository
+     * URL.
      */
     SvnClient(String repoUrl) {
-        repoUrl = stripTrunkPath(repoUrl)
+        def pathInfo = stripProjectPath(repoUrl)
+        repoUrl = pathInfo.repoUrl
 
         // Extract username and password from the URL.
         def (url, username, password) = tokenizeUrl(repoUrl)
 
         this.repoUrl = SVNURL.parseURIDecoded(url)
+        this.projectPath = pathInfo.projectPath
 
         if (username) {
             this.authManager = SVNWCUtil.createDefaultAuthenticationManager(username, password)
@@ -78,10 +84,13 @@ class SvnClient {
 
         def wcClient = new SVNStatusClient(authManager, null)
         def url = wcClient.doStatus(wc.canonicalFile, false).URL
-        this.repoUrl = SVNURL.create(url.protocol, url.userInfo, url.host, url.port, stripTrunkPath(url.path), false)
+        def pathInfo = stripProjectPath(url.path)
+        this.repoUrl = SVNURL.create(url.protocol, url.userInfo, url.host, url.port, pathInfo.repoUrl, false)
+        this.projectPath = pathInfo.projectPath
     }
 
     def getRepoUrl() { return this.repoUrl }
+    def getProjectPath() { return this.projectPath }
     def getAuthManager() { return this.authManager }
 
     def setCredentials(username, password) {
@@ -400,15 +409,29 @@ class SvnClient {
     }
 
     /**
-     * Strips any trailing 'trunk' sub-path and '/' from the given path.
+     * Splits the given path on the basis of a standard Subversion
+     * repository structure, returning an object with two properties:
+     * <tt>repoUrl</tt>, which is the base repository URL and
+     * <tt>projectPath</tt>, which is the 'trunk', 'branches/{name}'
+     * or 'tags/{name}' part. If the given path does not terminate with
+     * one of those three elements (a trailing '/' is optional) then
+     * the whole path is returned as the repository URL and the sub-path
+     * is either <code>null</code> or empty.
      */
-    private stripTrunkPath(String path) {
-        // Strip off any 'trunk' end to the path.
-        def m = path =~ '(.*)/trunk/?$' 
-        if (m) path = m[0][1]
+    private stripProjectPath(String path) {
+        def projectPath = ''
+
+        // Strip off any 'trunk', 'branches/<name>', or 'tags/<name>' end
+        // to the path
+        def m = path =~ '(.*)/(trunk|branches/[^/]+|tags/[^/]+)/?$'
+        if (m) {
+            path = m[0][1]
+            projectPath = m[0][2]
+        }
 
         // Strip off any trailing '/'.
         if (path[-1] == '/') path = path[0..-2]
-        return path
+
+        return [repoUrl: path, projectPath: projectPath]
     }
 }
