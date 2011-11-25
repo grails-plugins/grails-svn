@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 class SvnGrailsPlugin {
-    def version = "1.0.0.M1"
+    def version = "1.0.0"
     def grailsVersion = "1.1 > *"
     def dependsOn = [:]
 
