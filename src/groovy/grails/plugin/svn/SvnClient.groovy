@@ -235,13 +235,16 @@ class SvnClient {
      * Also, this method does not hit the network/internet, since it just
      * uses the information in the working copy.
      * @param files A collection of files that should be added to the
-     * repository on the next commit.
+     * repository on the next commit. Each entry should be coerceable to
+     * <tt>File</tt>.
      */
     def addFilesToSvn(files) {
         def statusClient = new SVNStatusClient(authManager, null)
         def wcClient = new SVNWCClient(authManager, null)
 
         for (file in files) {
+            file = file as File
+
             // Check whether this file is already in the repository.
             def addFile = false
             try {
@@ -272,6 +275,27 @@ class SvnClient {
         def statusClient = new SVNStatusClient(authManager, null)
         def wcClient = new SVNWCClient(authManager, null)
         wcClient.doAdd(dir, true, false, false, SVNDepth.INFINITY, false, false)
+    }
+
+    /**
+     * Makes sure that a given set of files are removed from the Subversion
+     * repository on the next commit if they exist. This method assumes that
+     * the files reside in a Subversion working copy. Also, this method does
+     * not hit the network/internet, since it just uses the information in
+     * the working copy. Finally, if a particular file doesn't exist, it's
+     * ignored.
+     * @param files A collection of files that should be removed from the
+     * repository on the next commit. Each entry should be coerceable to
+     * <tt>File</tt>.
+     */
+    def removeFilesFromSvn(files) {
+        def wcClient = new SVNWCClient(authManager, null)
+
+        for (file in files) {
+            file = file as File
+
+            if (file.exists()) wcClient.doDelete(file, true, false)
+        }
     }
 
     /**

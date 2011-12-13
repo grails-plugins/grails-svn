@@ -2,7 +2,7 @@ package grails.plugin.svn
 
 import grails.test.GrailsUnitTestCase
 
-import org.gmock.WithGMock
+import org.gmock.GMockTestCase
 import org.tmatesoft.svn.core.SVNDepth
 import org.tmatesoft.svn.core.SVNErrorCode
 import org.tmatesoft.svn.core.SVNErrorMessage
@@ -20,8 +20,7 @@ import org.tmatesoft.svn.core.wc.SVNUpdateClient
 import org.tmatesoft.svn.core.wc.SVNWCClient
 import org.tmatesoft.svn.core.wc.SVNWCUtil
 
-@WithGMock
-class SvnClientUnitTests extends GrailsUnitTestCase {
+class SvnClientUnitTests extends GMockTestCase {
     def repoUrl = "http://svn.codehaus.org/grails-plugins"
     def mockAuthMgr = new Expando()
 
@@ -228,6 +227,44 @@ class SvnClientUnitTests extends GrailsUnitTestCase {
         }
     }
 
+    void testRemoveFilesFromSvn() {
+        def wcDir = new File("tmp")
+        def files = [
+                new File(wcDir, "file1"),
+                "file2",
+                new File(wcDir, "file3"),
+                new File(wcDir, "file4"),
+                new File(wcDir, "file5") ]
+
+        mockClientConstruction()
+
+        def file2 = files[1] as File
+        def mockFile2 = mock(file2)
+        mockFile2.exists().returns(true)
+
+        mockFile2 = mock(files[1])
+        mockFile2.asType(File).returns(file2)
+
+        for (f in files) {
+            if (f instanceof File) {
+                def mockFile = mock(f)
+                mockFile.exists().returns(true)
+            }
+        }
+
+        def mockWcClient = mock(SVNWCClient, constructor(mockAuthMgr, null))
+        mockWcClient.doDelete(files[0] as File, true, false)
+        mockWcClient.doDelete(files[1] as File, true, false)
+        mockWcClient.doDelete(files[2] as File, true, false)
+        mockWcClient.doDelete(files[3] as File, true, false)
+        mockWcClient.doDelete(files[4] as File, true, false)
+
+        play {
+            def testClient = new SvnClient(repoUrl)
+            testClient.removeFilesFromSvn(files)
+        }
+    }
+
     void testTag() {
         def wcDir = new File("tmp")
 
@@ -382,7 +419,7 @@ class SvnClientUnitTests extends GrailsUnitTestCase {
                 testClient.fetchFile(testPath, new Expando())
             }
 
-            assertEquals "The remote file does not exist: $repoUrl/$testPath", msg
+            assert msg == "The remote file does not exist: $repoUrl/$testPath"
         }
     }
 
@@ -405,7 +442,7 @@ class SvnClientUnitTests extends GrailsUnitTestCase {
                 testClient.fetchFile(testPath, new Expando())
             }
 
-            assertEquals "The remote path is not a file: $repoUrl/$testPath", msg
+            assert msg == "The remote path is not a file: $repoUrl/$testPath"
         }
     }
 
