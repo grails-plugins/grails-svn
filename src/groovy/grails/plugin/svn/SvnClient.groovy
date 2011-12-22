@@ -135,7 +135,7 @@ class SvnClient {
             false,
             SVNDepth.EMPTY,
             null,
-            []) 
+            [])
     }
 
     /**
@@ -314,7 +314,7 @@ class SvnClient {
         def arg1 = [ copySource ] as SVNCopySource[]
         copyClient.doCopy(arg1, newTagUrl, false, false, true, msg, new SVNProperties())
     }
-    
+
     /**
      * Determines whether the given path exists in the configured repository.
      * Returns <code>true</code> if the path does exist.
@@ -358,7 +358,7 @@ class SvnClient {
             throw new Exception("The remote path is not a file: " + repoUrl.appendPath(path, false))
         }
 
-        // Copy the remote file's data to our local file. 
+        // Copy the remote file's data to our local file.
         localFile.withOutputStream { os ->
             repo.getFile(path, -1L, new SVNProperties(), os)
         }

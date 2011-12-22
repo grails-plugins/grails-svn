@@ -32,7 +32,7 @@ class SvnClientUnitTests extends GrailsUnitTestCase {
             def testClient = new SvnClient(repoUrl)
             assertNotNull "Repository URL is null.", testClient.repoUrl
             assertNotNull "Authentication manager is null.", testClient.authManager
-            assert !testClient.projectPath, "Project path is not empty." 
+            assert !testClient.projectPath, "Project path is not empty."
         }
     }
 

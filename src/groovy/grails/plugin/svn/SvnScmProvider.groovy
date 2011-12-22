@@ -106,15 +106,15 @@ class SvnScmProvider {
 
         if (fileOrDir.directory) {
             return SVNWCUtil.isVersionedDirectory(fileOrDir)
-        } 
+        }
         else {
             if (!SVNWCUtil.isVersionedDirectory(fileOrDir.parentFile)) return false
-            
+
             checkSvnClient()
             return svnClient.isVersioned(fileOrDir)
         }
     }
-   
+
     /**
      * Returns a list of all files in the project that aren't currently under
      * source control and aren't in an ignore list.

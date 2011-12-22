@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 class SvnGrailsPlugin {
-    def version = "1.0.0"
+    def version = "1.0.1"
     def grailsVersion = "1.1 > *"
-    def dependsOn = [:]
-
     def author = "Peter Ledbrook"
     def authorEmail = "pledbrook@vmware.com"
     def title = "Subversion Plugin"
-    def description = '''\
-Provides SVNKit as a dependency; an SvnClient class that makes it easier to work with Subversion; and integration with the Release plugin.
-'''
-
-    // URL to the plugin's documentation
+    def description = 'Provides SVNKit as a dependency; an SvnClient class that makes it easier to work with Subversion; and integration with the Release plugin.'
     def documentation = "http://grails.org/plugin/svn"
-
     def license = "APACHE"
     def organization = [ name: "SpringSource", url: "http://www.springsource.org/" ]
     def issueManagement = [ system: "JIRA", url: "http://jira.grails.org/browse/GRAILSPLUGINS" ]
