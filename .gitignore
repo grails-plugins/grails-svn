@@ -1,5 +1,6 @@
 .settings
-grails-*.zip
+dependencies.groovy
+grails-svn*.zip*
 plugin.xml
 stacktrace.log
 target/
