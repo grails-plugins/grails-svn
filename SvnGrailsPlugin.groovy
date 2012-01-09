@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 class SvnGrailsPlugin {
-    def version = "1.0.1"
+    def version = "1.0.2"
     def grailsVersion = "1.1 > *"
     def author = "Peter Ledbrook"
     def authorEmail = "pledbrook@vmware.com"
