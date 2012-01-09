@@ -208,6 +208,7 @@ class SvnScmProvider {
             // without a valid svnClient instance.
             try {
                 svnClient = new SvnClient(baseDir)
+                if (credentials) svnClient.setCredentials(*credentials)
             }
             catch (Exception ex) {
                 throw new IllegalStateException(
