@@ -13,7 +13,7 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-        build("org.tmatesoft.svnkit:svnkit:1.3.5") {
+        compile("org.tmatesoft.svnkit:svnkit:1.3.5") {
             excludes "jna", "trilead-ssh2", "sqljet"
         }
         test("org.gmock:gmock:0.8.1") {
@@ -22,7 +22,7 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        build(":release:1.0.0") {
+        build(":release:2.0.1") {
             excludes "svn"
             export = false
         }
