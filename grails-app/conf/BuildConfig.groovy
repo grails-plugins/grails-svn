@@ -13,8 +13,8 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-        compile("org.tmatesoft.svnkit:svnkit:1.3.5") {
-            excludes "jna", "trilead-ssh2", "sqljet"
+        compile("org.tmatesoft.svnkit:svnkit:1.7.8") {
+            excludes "jna", "trilead-ssh2"
         }
         test("org.gmock:gmock:0.8.1") {
             export = false
