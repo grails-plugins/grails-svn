@@ -22,8 +22,7 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        build(":release:2.0.1") {
-            excludes "svn"
+        build(":release:2.2.1") {
             export = false
         }
     }
