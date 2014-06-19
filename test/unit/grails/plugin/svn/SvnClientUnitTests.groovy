@@ -116,6 +116,18 @@ class SvnClientUnitTests extends GMockTestCase {
         }
     }
 
+    void testConstructorWithFileUrl() {
+        mockClientConstruction()
+
+        play {
+            def testClient = new SvnClient("file:///local/repository/path")
+            println testClient.repoUrl.dump()
+            assert testClient.repoUrl?.path == "/local/repository/path"
+            assert testClient.repoUrl?.protocol == "file"
+            assert testClient.projectPath == ""
+        }
+    }
+
     void testSetCredentials() {
         def mockUtil = mockClientConstruction()
         mockUtil.static.createDefaultAuthenticationManager("dilbert", "password")
