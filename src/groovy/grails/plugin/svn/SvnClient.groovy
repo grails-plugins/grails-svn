@@ -404,12 +404,15 @@ class SvnClient {
      * @return A tuple of base URL, username, and password.
      */
     protected final tokenizeUrl(url) {
-        // Parse the URL using SVNKit.
+
+        def result = []
+
         def svnUrl = SVNURL.parseURIDecoded(url)
 
         // Start with the base URL.
-        def result = []
-        if (!svnUrl.hasPort()) {
+        if (svnUrl.protocol == "file") {
+           result << url
+        } else if (!svnUrl.hasPort()) {
             // URL doesn't explicitly specify a port, so we don't include
             // it in the base URL either.
             result << "${svnUrl.protocol}://${svnUrl.host}${svnUrl.path}".toString()
